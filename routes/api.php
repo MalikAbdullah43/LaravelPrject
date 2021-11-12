@@ -3,19 +3,13 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
-use App\Http\Controllers\login;
-use App\Http\Controllers\signup;
-use App\Http\controllers\searchpost;
-use App\Http\Controllers\editpost;
+use App\Http\controllers\PostController;
+use App\Http\Controllers\UserCommentController;
 use App\Http\Controllers\updatecontroller;
-use App\Http\Controllers\create_post_controller;
-use App\Http\Controllers\log_out_controller;
-use App\Http\Controllers\update_post_controller;
-use App\Http\Controllers\delete_post_controller;
-use App\Http\Controllers\view_data_controller;
-use App\Http\Controllers\get_user_data_controller;
-use App\Http\Controllers\update_user_controller;
-use App\Http\Controllers\user_comment_controller;
+use App\Http\Controllers\UserController;
+use App\Http\Controllers\FreindController;
+
+
 
 /*
 |--------------------------------------------------------------------------
@@ -32,88 +26,90 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
+Route::group(['middleware'=>'cauth'],function(){
 
 
 /**
  *  create a new post
  */
 
-Route::post('/createpost',[create_post_controller::class,'create_post']);
-
-
+Route::post('/createpost',[PostController::class,'createPost']);
 /**
  * update post Route
  */
-Route::post('/updatepost',[update_post_controller::class,'index']);
-
+Route::post('/updatepost',[PostController::class,'updatePost']);
 /**
  * delete post Route
  */
-
-Route::post('/deletepost',[delete_post_controller::class,'delete_post']);
-
+Route::post('/deletepost',[PostController::class,'deletePost']);
 /**
  * get all posts
  */
- Route::post('/getdata',[view_data_controller::class,'get']);
-/**
- * signup route
- */
-Route::post('/signup',[signup::class,'user_signup']);
-
-/**
- * login route
- */
-
-Route::post('/login',[login::class,'user_login']);
-
-/**
- * logout route
- */
-
-Route::post('/logout',[log_out_controller::class,'log_out']);
-
+ Route::post('/getposts',[PostController::class,'readPost']);
 /**
  * get all user information
  */
-Route::post('/getuser',[get_user_data_controller::class,'get_data']);
+Route::post('/getuser',[UserController::class,'getUserData']);
 
 /**
  * update user
  */
-Route::post('/updateuser',[update_user_controller::class,'update_user']);
+Route::post('/updateuser',[UserController::class,'updateUser']);
 
 
 
-/**
- * search_post route
- */
-
-Route::get('/searchpost',[searchpost::class,'search_post']);
- 
-/**
- * edit_post route
- */
-Route::post('/editpost',[editpost::class,'edit_post']);
 
 /**
  * create comment
  */
-Route::post('/comment',[user_comment_controller::class,'create_comment']);
+Route::post('/comment',[UserCommentController::class,'createComment']);
 
 /**
  * update comment
  */
 
-Route::post('/updatecomment',[user_comment_controller::class,'update_comment']);
-// Route::post('/comment',[user_comment_controller::class,'create_comment']);
+Route::post('/updatecomment',[UserCommentController::class,'updateComment']);
+
+/**
+ * delete post
+ */
+Route::post('/deletecomment',[UserCommentController::class,'deleteComment']);
 // Route::post('/comment',[user_comment_controller::class,'create_comment']);
 
+
+
+
+/**
+ * logout route
+ */
+
+Route::post('/logout',[UserController::class,'logOut']);
+
+
+Route::post('/getpost',[UserController::class,'getPostDetails']);
+
+/**
+ * add friend route
+ */
+Route::post('/addfriend',[FreindController::class,'addFriend']);  
+ });
+
+ /**
+ * signup route
+ */
+Route::post('/signup',[UserController::class,'userSignup']);
+
+/**
+ * login route
+ */
+
+Route::post('/login',[UserController::class,'userLogin'])->middleware('eauth');
 
 
 /**
  * update verified email
  */
 
- Route::get('/verify/{email}/{token}',[updatecontroller::class,'update_data']);
+Route::get('/verify/{email}/{token}',[UpdateController::class,'updateData']);
+
 

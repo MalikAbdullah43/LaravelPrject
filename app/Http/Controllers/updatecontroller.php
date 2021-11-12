@@ -11,7 +11,7 @@ class updatecontroller extends Controller
      * 
      * updating Email_verified_at field 
      */
-    public function update_data($email,$token)
+    public function updateData($email,$token)
     {
        //$em=Crypt::decryptString($email);
 

@@ -9,16 +9,17 @@ use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 use App\Models\post;
 use App\Models\User;
+use App\Models\comment;
 
 
 class User extends Authenticatable
 {
-    use HasApiTokens, HasFactory, Notifiable;
+    use HasApiTokens, HasFactory, Notifiable; 
 
     /**
      * The attributes that are mass assignable.
      *
-     * @var string[]
+     * @var string[] 
      */
     protected $fillable = [
         'name',
@@ -50,12 +51,18 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 
-    // public function getpost()
-    // {
-    //     return $this->has('App/Models/post');
-    
-    
-    // }
+
+
+     public function getPostDetails()
+     {
+         return $this->hasMany(post::class,'user_id','uid');
+    }
+
+    public function getPostComments()
+    {
+
+        return $this->hasManyThrough(comment::class,post::class,'user_id','p_id','uid','pid');
+    }
 
    
 }

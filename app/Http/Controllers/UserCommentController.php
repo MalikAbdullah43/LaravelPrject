@@ -6,12 +6,12 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Models\comment;
 
-class user_comment_controller extends Controller
+class UserCommentController extends Controller
 {
     /**
      * creating a comment against a post
      */
-    public function create_comment(Request $req)
+    public function createComment(Request $req)
     {
 
         $key=$req->token;
@@ -47,7 +47,7 @@ class user_comment_controller extends Controller
     /**
      * updating an existing comment
      */
-    public function update_comment(Request $req)
+    public function updateComment(Request $req)
     {
 
         $key=$req->token;
@@ -66,15 +66,56 @@ class user_comment_controller extends Controller
                 'file' => $path,
                 'comment'=> $comment
             ];
-            DB::table('comments')->where('cid',$cid)->update($updateDetails);
+          if(DB::table('comments')->where(['cid'=> $cid,'user_id'=> $uid])->update($updateDetails)==1)
+            {
+           
 
             return response()->json(["messsage" => "comment updated successfuly"]);
+            }
+            else{
+
+                return response()->json(["messsage" => "you cannot update others comments"]);
+
+            }
         }
 
         else{
 
             return response()->json(["messsage" => "you are not login"]);
 
+        }
+    }
+
+     /**
+     * deleting an existing comment
+     */
+    public function deleteComment(Request $req)
+    {
+
+        $key=$req->token;
+        $cid=$req->cid;
+        $data=DB::table('users')->where('remember_token',$key)->get();
+        $numrows=count($data);
+        if($numrows>0){
+            $uid=$data[0]->uid;
+            
+            if(DB::table('comments')->where(['cid'=> $cid,'user_id'=> $uid])->delete() == 1)
+            {
+                
+                return response()->json(["messsage" => "comment Deleted successfuly"]);
+            
+            }
+
+            else{
+
+                return response()->json(["messsage" => "you are ot allowed to delete others comment"]);
+
+            }
+             
+           
+        }
+        else{
+            return response()->json(["messsage" => "you are not login"]);
         }
     }
 }

@@ -19,3 +19,4 @@ Route::get('/', function () {
 });
 
 Route::get('/send_mail',[MailController::class,'sendmail']); 
+
