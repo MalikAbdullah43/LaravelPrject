@@ -3,32 +3,51 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use App\Models\Friend;
 
 class FreindController extends Controller
 {
-    public function addFriend()
+    
+    public function addFriend(Request $req)
     {
-
-       $key=$req->token;
-       $fid=$req->fid;
-        $data=DB::table('users')->where('remember_token',$key)->get();
-        $numrows=count($data);
-        if($numrows>0)
-        {
-            $uid=$data[0]->uid;
-            DB::table('comments')->where('p_id',$pid)->delete();
-            if(DB::table('posts')->where('pid',$pid)->delete()==1)
+        $key=$req->token;
+        $fid=$req->fid;
+        $data=DB::table('users')
+                    ->where('remember_token',$key)->get();
+        $uid=$data[0]->uid;
+        if($uid != $fid)
+        { 
+            if(DB::table('users')->where('uid',$fid)->exists())
             {
-                 return response()->json(["messsage" => "Post deleted successfuly"]);
+                if(DB::table('friends')
+                        ->where(['userid_1' => $uid , 'userid_2' => $fid])
+                        ->orwhere(['userid_1' => $fid , 'userid_2' => $uid])
+                        ->doesntExist())
+                {
+                    $numrows=count($data);
+                    if($numrows>0)
+                    {
+                        $friend=new Friend;
+                        $friend->userid_1=$uid;
+                        $friend->userid_2=$fid;
+                        $friend->save();
+                        return response()->json(["messsage" => "now you are friend of".$fid]);
+                    }
+                    else{
+                            return response()->json(["messsage" => "you are not login"]);
+                        }
+                 }
+                 else{
+                        return response(["message" => "User with id = ".$fid." is already your friend"]);
+                     }
             }
             else{
-                 return response()->json(["messsage" => "You are not allowed to delete this post"]);
-            }
+                    return response(["message" => "User with id = ".$fid." is not registerd on our application"]);
+                }
         }
         else{
-
-            return response()->json(["messsage" => "you are not login so you cannot delete post"]);
-
-        }
+                return response(["message" => "you cannot be the friend of yourself"]);
+             }
     }
 }

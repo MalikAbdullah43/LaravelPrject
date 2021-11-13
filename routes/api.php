@@ -8,6 +8,8 @@ use App\Http\Controllers\UserCommentController;
 use App\Http\Controllers\updatecontroller;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\FreindController;
+use App\Http\Controllers\ListingController;
+use App\Http\Controllers\ForgetController;
 
 
 
@@ -91,7 +93,13 @@ Route::post('/getpost',[UserController::class,'getPostDetails']);
 /**
  * add friend route
  */
-Route::post('/addfriend',[FreindController::class,'addFriend']);  
+Route::post('/addfriend',[FreindController::class,'addFriend']);
+
+/**
+ * Listing All posts Route
+ */
+Route::post('/showallposts', [ListingController::class, 'listPosts']);
+
  });
 
  /**
@@ -112,4 +120,11 @@ Route::post('/login',[UserController::class,'userLogin'])->middleware('eauth');
 
 Route::get('/verify/{email}/{token}',[UpdateController::class,'updateData']);
 
-
+/**
+ * forget password route
+ */
+Route::post('/forgetpassword',[ForgetController::class,'forgetPassword']);
+/**
+ * Change Password route
+ */
+Route::post('/changepassword',[ForgetController::class,'changePassword']);
