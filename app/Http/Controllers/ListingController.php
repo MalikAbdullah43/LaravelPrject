@@ -17,6 +17,7 @@ class ListingController extends Controller
         $friend=$friends[0]->userid_2;
         $allposts = DB::table('posts')
                     ->whereIn('user_id', [$friend] )
+                    ->orWhere('user_id',$uid)
                     ->orWhere('accessors','public')
                     ->get();
         return response()->json($allposts);
