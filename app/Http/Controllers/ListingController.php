@@ -4,9 +4,12 @@ namespace App\Http\Controllers;
 use App\Models\post;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
+use App\Http\Requests\ListingPostsRequest;
+
+
 class ListingController extends Controller
 {
-    public function listPosts(Request $req)
+    public function listPosts(ListingPostsRequest $req)
     {
         $key=$req->token;
         $data=DB::table('users')
@@ -23,14 +26,3 @@ class ListingController extends Controller
         return response()->json($allposts);
     }
 }
-    
-
-
-              // ->orwhere('userid_2' , $fid );
-    //    $friends2=DB::table('friends')->select('userid_1')
-    //     ->where('userid_2',$uid)->get();
-
-    //     dd($friends2);
-
-        
- 

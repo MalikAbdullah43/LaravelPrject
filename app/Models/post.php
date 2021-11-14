@@ -27,6 +27,18 @@ class post extends Model
 
     ];
 
+     /**
+     * The attributes that should be hidden for serialization.
+     *
+     * @var array
+     */
+    protected $hidden = [
+        'password',
+        'remember_token',
+        'created_at',
+        'updated_at'
+    ];
+
     
 
 }

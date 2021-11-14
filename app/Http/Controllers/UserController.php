@@ -13,6 +13,8 @@ use Illuminate\Support\Facades\DB;
 use Firebase\JWT\JWT;
 use Firebase\JWT\Key;
 use App\Http\Requests\SignUpRequest;
+use App\Http\Requests\LogInRequest;
+use App\Http\Requests\UpdateUserRequest;
 
 
 class UserController extends Controller
@@ -35,7 +37,6 @@ class UserController extends Controller
         $mail=$req->email;
         $this->sendmail($mail,$token);
         return $user;
-
     }
       ////sending mail function
      
@@ -52,7 +53,7 @@ class UserController extends Controller
     /**
      * user login function
      */
-    public function userLogin(Request $req)
+    public function userLogin(LogInRequest $req)
     {
         $email=$req->email;
         $password=$req->password;
@@ -89,12 +90,10 @@ class UserController extends Controller
             echo "your email is not vreified";
         }
     }
-
     /**
      * update user function
      */
-
-    public function updateUser(Request $req)
+    public function updateUser(UpdateUserRequest $req)
     {
         $key=$req->token;
         $pid=$req->pid;
@@ -140,36 +139,36 @@ class UserController extends Controller
      */
     public function getUserData(Request $req)
     {
-     $key=$req->token;
-     $data=DB::table('users')->where('remember_token',$key)->get();
-     $numrows=count($data);
-     if($numrows>0)
-     {
-         $uid=$data[0]->uid;
-         $data=DB::table('users')->select('name','email','gender')->where('uid',$uid)->get();
- 
-         return response(['message'=>$data]);
+        $key=$req->token;
+        $data=DB::table('users')->where('remember_token',$key)->get();
+        $numrows=count($data);
+        if($numrows>0)
+        {
+            $uid=$data[0]->uid;
+            $data=DB::table('users')->select('name','email','gender')->where('uid',$uid)->get();
+            return response(['message'=>$data]);
+        }
+        else{
+            return response(['message'=>'you are not login or authenticated user']);
+        }
      }
-     else{
-         return response(['message'=>'you are not login or authenticated user']);
-     }
-     }
-
      /**
       * get all posts aginst a user
       */
-
-      public function getPostDetails(Request $req)
-      {
+    public function getPostDetails(Request $req)
+    {
         $key=$req->token;
-        if($key!=NULL){
-        $data=DB::table('users')->where('remember_token', $key)->get();
-        $uid=$data[0]->uid;
-        //$d1=user::with('getPostDetails')->where('uid',$uid)->get();
-        $users = User::with(['getPostDetails', 'getPostComments'])->where('uid',$uid)->get();
-        return response(["message" => $users]);
-        }else{
+        if($key!=NULL)
+        {
+            $data=DB::table('users')->where('remember_token', $key)->get();
+            $uid=$data[0]->uid;
+            //$d1=user::with('getPostDetails')->where('uid',$uid)->get();
+            $users = User::with(['getPostDetails', 'getPostComments'])->where('uid',$uid)->get();
+            return response(["message" => $users]);
+        }
+        else
+        {
             return response(["message"=>"Please provide a token"]);
         }
-      }
+    }
 }

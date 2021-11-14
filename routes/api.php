@@ -29,7 +29,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 /**
- * group middleware route
+ * group middleware 
  */
 Route::group(['middleware'=>'cauth'],function(){
 

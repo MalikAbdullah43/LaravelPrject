@@ -1,15 +1,14 @@
 <?php
 
 namespace App\Http\Controllers;
-
-use Illuminate\Http\Request;
+use Illuminate\Http\Requests;
+use App\Http\Requests\AddFriendRequest;
 use Illuminate\Support\Facades\DB;
 use App\Models\Friend;
 
 class FreindController extends Controller
 {
-    
-    public function addFriend(Request $req)
+    public function addFriend(AddFriendRequest $req)
     {
         $key=$req->token;
         $fid=$req->fid;
