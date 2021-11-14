@@ -22,7 +22,7 @@ class CreateUsersTable extends Migration
             $table->string('gender');
             $table->boolean('status');
             $table->integer('token');
-            $table->rememberToken();
+            $table->rememberToken('remember_token',255);
             $table->timestamps();
         });
     }

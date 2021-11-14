@@ -5,6 +5,8 @@ use Illuminate\Http\Requests;
 use App\Http\Requests\AddFriendRequest;
 use Illuminate\Support\Facades\DB;
 use App\Models\Friend;
+use Illuminate\Http\Request;
+
 
 class FreindController extends Controller
 {
@@ -48,5 +50,21 @@ class FreindController extends Controller
         else{
                 return response(["message" => "you cannot be the friend of yourself"]);
              }
+    }
+
+    public function removeFriend(Request $req)
+    {
+        $key=$req->token;
+        $fid=$req->fid;
+        $data=DB::table('users')->where('remember_token',$key)->get();
+        $uid=$data[0]->uid;
+        if(DB::table('friends')->where(['userid_1' => $uid , 'userid_2' => $fid])->delete() == 1)
+        {
+            return response(['Message' => 'Unfriend Successfuly']);
+        }
+        else{
+
+            return response(['Message' => 'You are not the friend of '.$fid]);
+        }
     }
 }

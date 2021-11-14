@@ -97,6 +97,11 @@ Route::post('/getpost',[UserController::class,'getPostDetails']);
  * add friend route
  */
 Route::post('/addfriend',[FreindController::class,'addFriend']);
+/**
+ * unfriend route
+ */
+
+Route::post('/unfriend',[FreindController::class,'removeFriend']);
 
 /**
  * Listing All posts Route
